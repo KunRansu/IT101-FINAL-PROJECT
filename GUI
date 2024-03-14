@@ -12,16 +12,25 @@ class App(TKMT.ThemedTKinterFrame):
         self.run()
 
     def startmenu(self):
-        label = tk.Label(self.master, text="Insert Program Title", font=("Arial", 36))
+        label_frame = self.addLabelFrame("")
+        label = tk.Label(self.master, text="CalHealth", font=("Segoe UI Semibold", 36))
         label.place(relx=0.5, rely=0.4, anchor="center")
+        label = tk.Label(
+            self.master,
+            text="The CalHealth is an application designed to promote healthy living by \nproviding health-conscious people an easy way to calculate he amount of \ncalories eaten per meal and plan succeeding meals based on the results.",
+            font=("Segoe UI", 12)
+        )
+        label.place(relx=0.5, rely=0.55, anchor="center")
 
-        button = tk.Button(self.master, text="Start Program", command=self.mainmenu)
-        button.place(relx=0.5, rely=0.6, anchor="center")
+        
+        button = tk.Button(self.master, text="Start Program", command=self.mainmenu, padx=20, pady=12)
+        button.place(relx=0.5, rely=0.8, anchor="center")
 
     def mainmenu(self):
         for widget in self.master.winfo_children():
             widget.destroy()
+        print("Main Menu launched!")
         self.run()
 
 if __name__ == "__main__":
-    App("TKMT", "dark")
+    App("TKMT", "light")
