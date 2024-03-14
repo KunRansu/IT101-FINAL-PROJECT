@@ -1,0 +1,29 @@
+import TKinterModernThemes as TKMT
+import tkinter as tk
+
+
+class App(TKMT.ThemedTKinterFrame):
+    def __init__(self, theme, mode):
+        super().__init__("Final Project")
+        self.master.title("CALculator")
+        self.master.geometry("800x400")
+        self.master.resizable(False, False)
+        self.startmenu()
+        self.debugPrint()
+        self.run()
+
+    def startmenu(self):
+        label = tk.Label(self.master, text="Insert Program Title", font=("Arial", 36))
+        label.place(relx=0.5, rely=0.4, anchor="center")
+
+        button = tk.Button(self.master, text="Go to Main Menu", command=self.mainmenu)
+        button.place(relx=0.5, rely=0.6, anchor="center")
+
+    def mainmenu(self):
+        for widget in self.master.winfo_children():
+            widget.destroy()
+        print("Main Menu launched!")
+        self.run()
+
+if __name__ == "__main__":
+    App("TKMT", "dark")
