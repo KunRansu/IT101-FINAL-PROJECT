@@ -1,6 +1,5 @@
-import TKinterModernThemes as TKMT
 import tkinter as tk
-
+import TKinterModernThemes as TKMT
 
 class App(TKMT.ThemedTKinterFrame):
     def __init__(self, theme, mode):
@@ -10,27 +9,41 @@ class App(TKMT.ThemedTKinterFrame):
         self.master.resizable(False, False)
         self.startmenu()
         self.run()
+        self.username = ""
 
     def startmenu(self):
-        label_frame = self.addLabelFrame("")
+        def check_entry():
+            if self.username_entry.get() == "":
+                self.button.config(state="disabled")
+            else:
+                self.username = self.username_entry.get()
+                self.button.config(state="normal")
+
         label = tk.Label(self.master, text="CalHealth", font=("Segoe UI Semibold", 36))
-        label.place(relx=0.5, rely=0.4, anchor="center")
-        label = tk.Label(
+        label.place(relx=0.5, rely=0.35, anchor="center")
+        description = tk.Label(
             self.master,
             text="The CalHealth is an application designed to promote healthy living by \nproviding health-conscious people an easy way to calculate he amount of \ncalories eaten per meal and plan succeeding meals based on the results.",
             font=("Segoe UI", 12)
         )
-        label.place(relx=0.5, rely=0.55, anchor="center")
-
+        description.place(relx=0.5, rely=0.6, anchor="center")
         
-        button = tk.Button(self.master, text="Start Program", command=self.mainmenu, padx=20, pady=12)
-        button.place(relx=0.5, rely=0.8, anchor="center")
+        Username = tk.Label(self.master, text="Username:", font=("Segoe UI", 12))
+        Username.place(relx=0.32, rely=0.78, anchor="center")
+        self.username_entry = tk.Entry(font=("Segoe UI", 12), width=30, borderwidth=2, relief="groove")
+        self.username_entry.place(relx=0.55, rely=.78, anchor="center")
+
+
+        self.button = tk.Button(self.master, text="Start Program", command=self.mainmenu, state='disabled')
+        self.button.place(relx=0.5, rely=0.9, anchor="center")
+        self.username_entry.bind("<KeyRelease>", lambda event: check_entry())
 
     def mainmenu(self):
         for widget in self.master.winfo_children():
             widget.destroy()
         print("Main Menu launched!")
-        self.run()
+        welcome = tk.Label(self.master, text=f"Welcome {self.username}", font=("Segoe UI Semibold", 12))
+        welcome.place(relx=0.06, rely=0.08)
 
 if __name__ == "__main__":
     App("TKMT", "light")
