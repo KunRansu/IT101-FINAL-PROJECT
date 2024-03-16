@@ -1,6 +1,6 @@
 import tkinter as tk
 import TKinterModernThemes as TKMT
-
+import json
 class App(TKMT.ThemedTKinterFrame):
     def __init__(self, theme, mode, usecommandlineargs=True, usethemeconfigfile=True):
         super().__init__("Final Project", theme, mode, usecommandlineargs, usethemeconfigfile)
@@ -11,7 +11,10 @@ class App(TKMT.ThemedTKinterFrame):
         self.startmenu()
         self.run()
         self.username = ""
+    title_font = ("Segoe UI Black", 36)
+    text_font = ("Segoe UI", 12)
 
+    
     def startmenu(self):
         def check_entry():
             if self.username_entry.get() == "":
@@ -20,31 +23,72 @@ class App(TKMT.ThemedTKinterFrame):
                 self.username = self.username_entry.get()
                 self.button.config(state="normal")
 
-        title = tk.Label(self.master, text="CalHealth", font=("Segoe UI Semibold", 36), bg= '#FEFFF2')
+        title = tk.Label(self.master, text="CalHealth", font=self.title_font, bg= '#FEFFF2')
         title.place(relx=0.5, rely=0.35, anchor="center")
         description = tk.Label(
             self.master,
             text="The CalHealth is an application designed to promote healthy living by \nproviding health-conscious people an easy way to calculate he amount of \ncalories eaten per meal and plan succeeding meals based on the results.",
-            font=("Segoe UI", 12), bg= '#FEFFF2'
+            font=self.text_font, bg= '#FEFFF2'
         )
         description.place(relx=0.5, rely=0.6, anchor="center")
         
-        Username = tk.Label(self.master, text="Username:", font=("Segoe UI", 12), bg= '#FEFFF2')
+        Username = tk.Label(self.master, text="Username:", font=self.text_font, bg= '#FEFFF2')
         Username.place(relx=0.32, rely=0.78, anchor="center")
-        self.username_entry = tk.Entry(font=("Segoe UI", 12), width=30, borderwidth=2, relief="groove")
+        self.username_entry = tk.Entry(font=self.text_font, width=30, borderwidth=2, relief="groove")
         self.username_entry.place(relx=0.55, rely=.78, anchor="center")
 
 
         self.button = tk.Button(self.master, text="Start Program", command=self.mainmenu, state='disabled')
         self.button.place(relx=0.5, rely=0.9, anchor="center")
-        self.username_entry.bind("<KeyRelease>", lambda event: check_entry())
+        self.username_entry.bind("<KeyRelease>", lambda event, self=self: check_entry())
 
     def mainmenu(self):
         for widget in self.master.winfo_children():
             widget.destroy()
         print("Main Menu launched!")
-        welcome = tk.Label(self.master, text=f"Welcome {self.username}", font=("Segoe UI Semibold", 12))
+        welcome = tk.Label(self.master, text=f"Welcome {self.username}", font=self.text_font, bg= '#FEFFF2')
         welcome.place(relx=0.06, rely=0.08)
+
+        option_1 = tk.Button(self.master, text="Calculate Daily \nCaloric Intake", padx=24, pady=6, width=15, command=self.caloric_intake)
+        option_1.place(relx=0.2, rely=0.3, anchor="center")
+
+        option_2 = tk.Button(self.master, text="See Caloric \nHistory", padx=24, pady=6, width=15, command=self.caloric_history)
+        option_2.place(relx=0.2, rely=0.5, anchor="center")
+
+        option_3 = tk.Button(self.master, text="Settings", padx=24, pady=6, width=15, command=self.settings)
+        option_3.place(relx=0.2, rely=0.7, anchor="center")
+
+        return_button = tk.Button(self.master, text="Exit Program", command=self.exit_program)
+        return_button.place(relx=0.9, rely=0.9, anchor="center")
+    def caloric_intake(self):
+        for widget in self.master.winfo_children():
+            widget.destroy()
+        print("Caloric History launched!")
+        # code function here
+
+        return_button = tk.Button(self.master, text="Return to Main Menu", command=self.mainmenu)
+        return_button.place(relx=0.9, rely=0.9, anchor="center")
+
+    def caloric_history(self):
+        for widget in self.master.winfo_children():
+            widget.destroy()
+        print("Caloric History launched!")
+        # code function here
+
+        return_button = tk.Button(self.master, text="Return to Main Menu", command=self.mainmenu)
+        return_button.place(relx=0.9, rely=0.9, anchor="center")
+
+    def settings(self):
+        for widget in self.master.winfo_children():
+            widget.destroy()
+        print("Settings launched!")
+        # code function here
+
+        return_button = tk.Button(self.master, text="Return to Main Menu", command=self.mainmenu)
+        return_button.place(relx=0.9, rely=0.9, anchor="center")
+
+    def exit_program(self):
+        self.master.destroy()
 
 if __name__ == "__main__":
     App("sun-valley", "light")
