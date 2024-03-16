@@ -11,10 +11,11 @@ class App(TKMT.ThemedTKinterFrame):
         self.startmenu()
         self.run()
         self.username = ""
-    title_font = ("Segoe UI Black", 36)
-    text_font = ("Segoe UI", 12)
-
     
+    title_font = ("Segoe UI Black", 36)
+    heading_font = ("Segoe UI Semibold", 24)
+    text_font = ("Segoe UI", 12)
+    color_bg = '#FEFFF2'
     def startmenu(self):
         def check_entry():
             if self.username_entry.get() == "":
@@ -23,7 +24,7 @@ class App(TKMT.ThemedTKinterFrame):
                 self.username = self.username_entry.get()
                 self.button.config(state="normal")
 
-        title = tk.Label(self.master, text="CalHealth", font=self.title_font, bg= '#FEFFF2')
+        title = tk.Label(self.master, text="CalHealth", font=self.title_font, bg= self.color_bg)
         title.place(relx=0.5, rely=0.35, anchor="center")
         description = tk.Label(
             self.master,
@@ -32,7 +33,7 @@ class App(TKMT.ThemedTKinterFrame):
         )
         description.place(relx=0.5, rely=0.6, anchor="center")
         
-        Username = tk.Label(self.master, text="Username:", font=self.text_font, bg= '#FEFFF2')
+        Username = tk.Label(self.master, text="Username:", font=self.text_font, bg= self.color_bg)
         Username.place(relx=0.32, rely=0.78, anchor="center")
         self.username_entry = tk.Entry(font=self.text_font, width=30, borderwidth=2, relief="groove")
         self.username_entry.place(relx=0.55, rely=.78, anchor="center")
@@ -46,42 +47,114 @@ class App(TKMT.ThemedTKinterFrame):
         for widget in self.master.winfo_children():
             widget.destroy()
         print("Main Menu launched!")
-        welcome = tk.Label(self.master, text=f"Welcome {self.username}", font=self.text_font, bg= '#FEFFF2')
+        welcome = tk.Label(self.master, text=f"Welcome {self.username}", font=self.text_font, bg= self.color_bg)
         welcome.place(relx=0.06, rely=0.08)
 
-        option_1 = tk.Button(self.master, text="Calculate Daily \nCaloric Intake", padx=24, pady=6, width=15, command=self.caloric_intake)
+        option_1 = tk.Button(self.master, text="Calculate Daily \nCaloric Intake", padx=24, pady=6, width=15, command=self.Calculate_Calories)
         option_1.place(relx=0.2, rely=0.3, anchor="center")
 
-        option_2 = tk.Button(self.master, text="See Caloric \nHistory", padx=24, pady=6, width=15, command=self.caloric_history)
+        option_2 = tk.Button(self.master, text="Plan Meals", padx=24, pady=6, width=15, command=self.Plan_Meals)
         option_2.place(relx=0.2, rely=0.5, anchor="center")
 
-        option_3 = tk.Button(self.master, text="Settings", padx=24, pady=6, width=15, command=self.settings)
+        option_3 = tk.Button(self.master, text="Caloric History", padx=24, pady=6, width=15, command=self.Caloric_History)
         option_3.place(relx=0.2, rely=0.7, anchor="center")
 
         return_button = tk.Button(self.master, text="Exit Program", command=self.exit_program)
         return_button.place(relx=0.9, rely=0.9, anchor="center")
-    def caloric_intake(self):
+    def Calculate_Calories(self):
+        def val_check():
+            age = self.age_entry.get()
+            gender = self.gender_var.get()
+            height = self.height_entry.get()
+            weight = self.weight_entry.get()
+
+            if not age.isdigit() or not height.isdigit() or not weight.isdigit():
+                self.invalid_label.config(text="Invalid value")
+
+            if gender == "":
+                self.invalid_label.config(text="Please pick one")
+            else:
+                self.invalid_label.config(text="")
+
+            if age.isdigit() and height.isdigit() and weight.isdigit():
+                calculate_bmr()
+
+
+        def calculate_bmr():
+            age = int(self.age_entry.get())
+            weight = int(self.weight_entry.get())
+            height = int(self.height_entry.get())
+            if self.gender_var.get() == "M":
+                bmr = (88.4 + 13.4 * weight) + (4.8 * height) - (5.68 * age)
+            elif self.gender_var.get() == "F":
+                bmr = (447.6 + 9.25 * weight) + (3.10 * height) - (4.33 * age)
+            self.bmr_value = tk.Label(self.master, text=f"{bmr}", font=self.text_font, bg=self.color_bg)
+            self.bmr_value.place(relx=0.8, rely=0.2, anchor="center")
+
         for widget in self.master.winfo_children():
             widget.destroy()
-        print("Caloric History launched!")
+        print("Calculate Calories launched!")
+        welcome = tk.Label(self.master, text=f"Calorie Calculator", font=self.text_font, bg= self.color_bg)
+        welcome.place(relx=0.25, rely=0.08, anchor="center")
+        
+        age_label = tk.Label(self.master, text="Age:", font=self.text_font, bg=self.color_bg)
+        age_label.place(relx=0.12, rely=0.2, anchor="center")
+        self.age_entry = tk.Entry(font=self.text_font, width=10, borderwidth=2, relief="groove")
+        self.age_entry.place(relx=0.25, rely=0.2, anchor="center")
+
+        gender_label = tk.Label(self.master, text="Gender:", font=self.text_font, bg=self.color_bg)
+        gender_label.place(relx=0.12, rely=0.3, anchor="center")
+        self.gender_var = tk.StringVar()
+        self.male_checkbox = tk.Radiobutton(self.master, variable=self.gender_var, value="M", font=self.text_font, bg=self.color_bg)
+        self.male_checkbox.place(relx=0.2, rely=0.3, anchor="center")
+        self.male_label = tk.Label(self.master, text="Male", font=self.text_font, bg=self.color_bg).place(relx=0.25, rely=0.3, anchor="center")
+
+        self.female_checkbox = tk.Radiobutton(self.master, variable=self.gender_var, value="F", font=self.text_font, bg=self.color_bg)
+        self.female_checkbox.place(relx=0.32, rely=0.3, anchor="center")
+        self.female_label = tk.Label(self.master, text="Female", font=self.text_font, bg=self.color_bg).place(relx=0.37, rely=0.3, anchor="center")
+        self.gender_var.set(None)
+
+        height_label = tk.Label(self.master, text="Height (cm):", font=self.text_font, bg=self.color_bg)
+        height_label.place(relx=0.12, rely=0.4, anchor="center")
+        self.height_entry = tk.Entry(font=self.text_font, width=10, borderwidth=2, relief="groove")
+        self.height_entry.place(relx=0.25, rely=0.4, anchor="center")
+
+        weight_label = tk.Label(self.master, text="Weight (kg):", font=self.text_font, bg=self.color_bg)
+        weight_label.place(relx=0.12, rely=0.5, anchor="center")
+        self.weight_entry = tk.Entry(font=self.text_font, width=10, borderwidth=2, relief="groove")
+        self.weight_entry.place(relx=0.25, rely=0.5, anchor="center")
+
+        calculate_button = tk.Button(self.master, text="Calculate BMR", command=val_check)
+        calculate_button.place(relx=0.25, rely=0.6, anchor="center")
+
+        
+        self.invalid_label = tk.Label(self.master, text="", font=self.text_font, bg=self.color_bg)
+        self.invalid_label.place(relx=0.25, rely=0.7, anchor="center")
+
+
+        bmr_label = tk.Label(self.master, text="BMR:", font=self.text_font, bg=self.color_bg)
+        bmr_label.place(relx=0.7, rely=0.2, anchor="center")
+
+
+        
+        return_button = tk.Button(self.master, text="Return to Main Menu", command=self.mainmenu)
+        return_button.place(relx=0.9, rely=0.9, anchor="center")
+
+ 
+
+    def Plan_Meals(self):
+        for widget in self.master.winfo_children():
+            widget.destroy()
+        print("Plan Meals launched!")
         # code function here
 
         return_button = tk.Button(self.master, text="Return to Main Menu", command=self.mainmenu)
         return_button.place(relx=0.9, rely=0.9, anchor="center")
 
-    def caloric_history(self):
+    def Caloric_History(self):
         for widget in self.master.winfo_children():
             widget.destroy()
         print("Caloric History launched!")
-        # code function here
-
-        return_button = tk.Button(self.master, text="Return to Main Menu", command=self.mainmenu)
-        return_button.place(relx=0.9, rely=0.9, anchor="center")
-
-    def settings(self):
-        for widget in self.master.winfo_children():
-            widget.destroy()
-        print("Settings launched!")
         # code function here
 
         return_button = tk.Button(self.master, text="Return to Main Menu", command=self.mainmenu)
